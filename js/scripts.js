@@ -1,22 +1,33 @@
-//don't need to use localstorage because browser autofill does that for us :)
-if (window.location.hash) {
-	var x = window.location.hash.substr(1).split(/\D/g);
-	document.getElementById("buy").value = x[0] || "";
+function fillInputs(list) {
+	document.getElementById("buy").value = list[0] || "";
 	for (var i=2;i<12;i++) {
-		document.getElementById("sell_"+i).value = x[i-1] || "";
+		document.getElementById("sell_"+i).value = list[i-1] || "";
 	}
+	update();
 }
 
-update();
+if (window.location.hash) {
+	var x = window.location.hash.substr(1).split(/\D/g);
+	fillInputs(x);
+}
+
+function interpColor(c1,c2,t) {
+	return "rgb("+c1.map((x,i)=>x*(1-t)+c2[i]*t).join(",")+")";
+}
 
 function color(price, base) {
 	var p=price/base;
 	// p ranges like 0 to 6 (usually ~1)
-	// so ideally this should be like
-	// 0-1 (gray-red)
-	// 1-2 (red-yellow)
-	// 2-6 (yellow-green)
-	// since the 2-6 range is basicallly nothing
+	// but in reality will only be 0-9, 1.4, 2, or 6
+	if (p<=0.9)
+		return interpColor([255,64,64],[255,128,0],p/0.9);
+	if (p<=1.4)
+		return interpColor([255,128,0],[255,255,0],(p-0.9)/(1.4-0.9));
+	if (p<=2)
+		return interpColor([255,255,0],[0,255,0],(p-1.4)/(2-1.4));
+	if (p<=6)
+		return interpColor([0,255,0],[0,255,255],(p-2)/(6-2));
+	return "blue";
 	if(p<1)
 		return "gray"//"magenta" //"gray" //whatever"rgb("+(p*100+50)+","+(p*100+50)+","+(p*100+50)+")"
 	p = Math.max(p-1,0)/5;
@@ -32,7 +43,6 @@ function cell(min, max, base) {
 }
 
 function update() {
-	console.log("E");
 	// Update output on any input change
 	var buy_price = parseInt(document.getElementById("buy").value);
 

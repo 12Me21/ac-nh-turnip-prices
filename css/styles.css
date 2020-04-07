@@ -3,22 +3,22 @@ td {
 }
 
 #turnipTable th, #turnipTable td {
-    padding: 5px;
+   padding: 2px;
 }
 
 #turnipTable thead tr:first-child {
-    border: none;
+   border: none;
 }
 
 #turnipTable th {
-    text-align: center;
+   text-align: center;
 }
 
 #turnipTable td:first-child {
-    white-space: nowrap;
-    text-align: left;
+   white-space: nowrap;
+   text-align: left;
 }
 
 #turnipTable td {
-    text-align: center;
+   text-align: center;
 }
