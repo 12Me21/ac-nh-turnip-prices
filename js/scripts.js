@@ -1,4 +1,12 @@
 //don't need to use localstorage because browser autofill does that for us :)
+if (window.location.hash) {
+	var x = window.location.hash.substr(1).split(/\D+/g);
+	document.getElementById("buy").value = x[0] || "";
+	for (var i=2;i<12;i++) {
+		document.getElementById("sell_"+i).value = x[i-1] || "";
+	}
+}
+
 update();
 
 function color(price, base) {
