@@ -582,9 +582,10 @@ function analyze_possibilities(sell_prices) {
 	}
 
 	generated_possibilities.push({
-		pattern_description: "min/max",
+		pattern_description: "<u>(min/max)<u>",
 		pattern_number: 4,
 		prices: global_min_max,
+		first: true,
 	});
 
 	for (let poss of generated_possibilities) {
@@ -598,7 +599,7 @@ function analyze_possibilities(sell_prices) {
 		poss.weekMax = Math.max(...weekMaxes);
 	}
 
-	generated_possibilities.sort((a, b) => a.weekMax < b.weekMax);
+	generated_possibilities.sort((a, b) => a.weekMax < b.weekMax || b.first);
 
 	return generated_possibilities;
 }
