@@ -1,6 +1,6 @@
 //don't need to use localstorage because browser autofill does that for us :)
 if (window.location.hash) {
-	var x = window.location.hash.substr(1).split(/\D+/g);
+	var x = window.location.hash.substr(1).split(/\D/g);
 	document.getElementById("buy").value = x[0] || "";
 	for (var i=2;i<12;i++) {
 		document.getElementById("sell_"+i).value = x[i-1] || "";
@@ -40,6 +40,7 @@ function update() {
 	for (var i = 2; i < 14; i++) {
 		sell_prices.push(parseInt(document.getElementById("sell_"+i).value));
 	}
+	window.location.hash = sell_prices.slice(1).map(x=>x||"").join(" ").trimEnd().replace(/ /g,",");
 	
 	localStorage.setItem("sell_prices", JSON.stringify(sell_prices));
 	
@@ -53,9 +54,9 @@ function update() {
 	for (var poss of analyze_possibilities(sell_prices)) {
 		var out_line = "<tr><td>" + poss.pattern_description + "</td>"
 		for (var day of poss.prices.slice(1)) {
-			out_line += cell(day.min, day.max, buy_price || 100);
+			out_line += cell(day.min, day.max, poss.prices[1].min);
 		}
-		out_line += cell(poss.weekMin, poss.weekMax, buy_price || 100) + "</tr>";
+		out_line += cell(poss.weekMin, poss.weekMax, poss.prices[1].min) + "</tr>";
 		output_possibilities += out_line
 	}
 	
