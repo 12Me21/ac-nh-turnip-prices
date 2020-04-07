@@ -1,6 +1,28 @@
 //don't need to use localstorage because browser autofill does that for us :)
 update();
 
+function color(price, base) {
+	var p=price/base;
+	// p ranges like 0 to 6 (usually ~1)
+	// so ideally this should be like
+	// 0-1 (gray-red)
+	// 1-2 (red-yellow)
+	// 2-6 (yellow-green)
+	// since the 2-6 range is basicallly nothing
+	if(p<1)
+		return "gray"//"magenta" //"gray" //whatever"rgb("+(p*100+50)+","+(p*100+50)+","+(p*100+50)+")"
+	p = Math.max(p-1,0)/5;
+	return "rgb("+((1-p)*2*200+55)+","+(p*2*200+55)+",55)"
+}
+
+function cell(min, max, base) {
+	if (min != max) {
+		return "<td style='background-image: linear-gradient(to right,"+color(min,base)+","+color(max,base)+")'>"+min+".."+max+"</td>";
+	} else {
+		return "<td class='one' style='background-color:"+color(min,base)+"'>"+min+"</td>";
+	}
+}
+
 function update() {
 	console.log("E");
 	// Update output on any input change
@@ -23,13 +45,9 @@ function update() {
 	for (var poss of analyze_possibilities(sell_prices)) {
 		var out_line = "<tr><td>" + poss.pattern_description + "</td>"
 		for (var day of poss.prices.slice(1)) {
-			if (day.min !== day.max) {
-				out_line += "<td>"+day.min+".."+day.max+"</td>";
-			} else {
-				out_line += "<td class='one'>"+day.min+"</td>";
-			}
+			out_line += cell(day.min, day.max, buy_price || 100);
 		}
-		out_line += "<td class='one'>"+poss.weekMin+"</td><td class='one'>"+poss.weekMax+"</td></tr>";
+		out_line += cell(poss.weekMin, poss.weekMax, buy_price || 100) + "</tr>";
 		output_possibilities += out_line
 	}
 	
