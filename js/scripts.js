@@ -1,6 +1,6 @@
 function fillInputs(list) {
 	document.getElementById("buy").value = list[0] || "";
-	for (var i=2;i<12;i++) {
+	for (var i=2;i<14;i++) {
 		document.getElementById("sell_"+i).value = list[i-1] || "";
 	}
 	update();
